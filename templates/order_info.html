@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Shooop | Order info{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+<p>Product : {{ product.product.name }}</p>
+<p>Quantity : {{ product.quantity }}</p>
+<p>Price : {{ product.price }}</p>
+<p>Buyer : {{ product.name }}</p>
+<p>Phone : {{ product.phone }}</p>
+<p>Email : {{ product.email }}</p>
+<p>Shipping address : {{ product.address }}</p>
+</div>
+
+<div class="container mt-5 my-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-white p-2 border rounded px-3">
+                <div class="d-flex flex-row justify-content-between align-items-center order">
+                    <div class="d-flex flex-column order-details"><span>Your order: <span
+                                style="font-weight: bold;">{{ product.status|last }}</span></span><span class="date">on
+                            {{ product.date_created }}</span></div>
+                    <div class="tracking-details"><button class="btn btn-outline-primary btn-sm" type="button">Track
+                            order details</button></div>
+                </div>
+                <hr class="divider mb-4">
+                <div class="d-flex flex-row justify-content-between align-items-center align-content-center"><span
+                        class="dot"></span>
+                    {% if product.status|length > 1 %}
+                    <hr class="flex-fill track-line"><span class="dot"></span>
+                    {% else %}
+                    <hr class="flex-fill track-line"><span class="dot transaprent"></span>
+                    {% endif %}
+                    {% if product.status|length > 2 %}
+                    <hr class="flex-fill track-line"><span class="dot"></span>
+                    {% else %}
+                    <hr class="flex-fill track-line"><span class="dot transaprent"></span>
+                    {% endif %}
+                    {% if product.status|length > 3 %}
+                    <hr class="flex-fill track-line"><span class="dot"></span>
+                    {% else %}
+                    <hr class="flex-fill track-line"><span class="dot transaprent"></span>
+                    {% endif %}
+                    {% if product.status|length > 4 %}
+                    <hr class="flex-fill track-line"><span
+                        class="d-flex justify-content-center align-items-center big-dot dot"><i
+                            class="fa fa-check text-white"></i></span>
+                    {% else %}
+                    <hr class="flex-fill track-line"><span
+                        class="d-flex justify-content-center align-items-center big-dot-trs dot"><i
+                            class="fa fa-check text-white"></i></span>
+                    {% endif %}
+                </div>
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex flex-column align-items-start"><span>Pending</span></div>
+                    <div class="d-flex flex-column justify-content-center"><span>Order Received</span></div>
+                    <div class="d-flex flex-column justify-content-center align-items-center"><span>Preparing</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center"><span>Onshiping</span></div>
+                    <div class="d-flex flex-column align-items-end"><span>Completed</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background-color: #eee
+    }
+
+    .date {
+        font-size: 11px
+    }
+
+    .divider {
+        height: 0px !important;
+        background-color: blue
+    }
+
+    .track-line {
+        height: 2px !important;
+        background-color: green
+    }
+
+    .dot {
+        height: 10px;
+        width: 10px;
+        margin-left: 3px;
+        margin-right: 3px;
+        margin-top: 0px;
+        background-color: green;
+        border-radius: 50%;
+        display: inline-block
+    }
+
+    .transaprent {
+        background-color: rgb(144, 238, 144);
+    }
+
+    .big-dot {
+        height: 25px;
+        width: 25px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+        background-color: green;
+        border-radius: 50%;
+        display: inline-block
+    }
+
+    .big-dot-trs{
+        height: 25px;
+        width: 25px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+        background-color: rgb(144, 238, 144);
+        border-radius: 50%;
+        display: inline-block
+    }
+
+    .big-dot i {
+        font-size: 12px
+    }
+</style>
+{% endblock content %}

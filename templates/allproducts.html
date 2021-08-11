@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Shooop | All products{% endblock title %}
+
+{% block content %}
+<div class="container my-2">
+    <h4>All Products List</h4>
+    <div class="row my-2">
+        {% for product in all_products %}
+        <div class="col col-lg-3 col-sm-2 my-1 mx-1">
+            <div class="card" style="width: 18rem;">
+                <div class="container  my-2">
+                    <img src="http://127.0.0.1:8000/media/{{ product.image }}" class="card-img-top"
+                        alt="{{ product.name }}" height="250px">
+                </div>
+                <div class="card-body">
+                    <a href="/details/{{ product.slug }}">
+                        <h6>{{ product.name|truncatechars:45 }}</h6>
+                    </a>
+                    <p>৳{{ product.price }}</p>
+                    <div class="d-grid gap-2">
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-dark" href="#" role="button">Add to cart</a>
+                        {% else %}
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                            data-bs-target="#loginModal">Add
+                            to cart</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!-- login modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/user/login">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            name="username">
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Login</button>
+                </form>
+                <p>Don't have account? <span><a href="/user/create">create here</a></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

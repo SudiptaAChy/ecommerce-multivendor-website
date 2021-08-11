@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Shooop | My Order{% endblock title %}
+{% block content %}
+{% if all_products %}
+<div class="row my-2">
+        {% for product in all_products %}
+        <div class="col col-lg-3 col-sm-2 my-1 mx-1">
+            <div class="card" style="width: 18rem;">
+                <div class="container  my-2">
+                    <img src="http://127.0.0.1:8000/media/{{ product.product.image }}" class="card-img-top"
+                        alt="{{ product.name }}" height="250px">
+                </div>
+                <div class="card-body">
+                    <a href="/details/{{ product.product.slug }}">
+                        <h6>{{ product.product.name|truncatechars:45 }}</h6>
+                    </a>
+                    <p>Qty - {{ product.quantity }}</p>
+                    <p>৳{{ product.price }}</p>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-dark" href="/order/info/{{ product.id }}" role="button">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+<h5>No products found</h5>
+{% endif %}
+{% endblock content %}

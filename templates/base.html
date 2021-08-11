@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- font awesome icon -->
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <title>{% block title %}Shooop{% endblock title %}</title>
+</head>
+
+<body>
+    <!-- show messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- header -->
+    <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Shooop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/allproducts">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/topsell">Best selling</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/discountproducts">Discounts</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Catagory
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for catagory in catagories %}
+                            <li><a class="dropdown-item" href="/catagoryproducts/{{ catagory.name }}">{{ catagory.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" method="POST", action="/search" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchText" required>
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <div class="mx-4">
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user" style="color: white;"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="right: 0; left: auto;">
+                            {% if userinfo %}
+                                <li><a class="dropdown-item" href="/user/dashboard">{{ userinfo.fname }}</a></li>
+                                {% if userinfo.type == "buyer" %}
+                                    <li><a class="dropdown-item" href="/mycart/{{ user.id }}">My Cart</a></li>
+                                    <li><a class="dropdown-item" href="/order/list">My Order</a></li>
+                                {% else %}
+                                {% endif %}
+                            {% endif %}
+                            <li><a class="dropdown-item" href="/user/logout/">Logout</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Login
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock content %}
+
+    <!-- login modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/user/login">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                name="username">
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Login</button>
+                    </form>
+                    <p>Don't have account? <span><a href="/user/create">create here</a></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="site-footer bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 my-5">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h2 class="footer-heading mb-4">About Us</h2>
+                            <p>We are industry leading e-commerce comapny</p>
+                        </div>
+                        <div class="col-md-3 ml-auto">
+                            <h2 class="footer-heading mb-4">Quick Links</h2>
+                            <ul class="list-unstyled">
+                                <li><a href="#about-section" class="smoothscroll">About Us</a></li>
+                                <li><a href="#services-section" class="smoothscroll">Services</a></li>
+                                <li><a href="#testimonials-section" class="smoothscroll">Testimonials</a></li>
+                                <li><a href="#contact-section" class="smoothscroll">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="footer-heading mb-4">Follow Us</h2>
+                            <a href="#" target="_blanck" class="pl-3 pr-3 mx-2"><i class="fab fa-facebook"
+                                    style="font-size: 35px; color: white;"></i></a>
+                            <a href="#" class="pl-3 pr-3" mx-2><i class="fab fa-youtube"
+                                    style="font-size: 35px; color: white;"></i></a>
+                            <a href="#" class="pl-3 pr-3 mx-2"><i class="fab fa-instagram"
+                                    style="font-size: 35px; color: white;"></i></a>
+                            <a href="#" class="pl-3 pr-3 mx-2"><i class="fab fa-linkedin"
+                                    style="font-size: 35px; color: white;"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 my-5">
+                    <h2 class="footer-heading mb-4">Subscribe Newsletter</h2>
+                    <form action="#" method="post" class="footer-subscribe">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control border-secondary text-white bg-transparent"
+                                placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary text-black" type="button"
+                                    id="button-addon2">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <div class="border-top pt-3">
+                        <p>
+                            Copyright ©2021 | This Website is Develop by Sudipta
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

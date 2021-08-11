@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Shooop | {{ product.name }}{% endblock title %}
+
+{% block content %}
+<!-- Heading -->
+<div class="container">
+    {% if product.user == request.user %}
+    <div class="row my-2">
+        <div class="col col-1">
+            <a class="btn btn-success text-white" href="/update/{{ product.id }}">Edit</a>
+        </div>
+        <div class="col col-1">
+            <a class="btn btn-danger text-white" href="/delete/{{ product.id }}">Delete</a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row my-2 mx-2">
+        <div class="col col-xxl-2 col-xl-4 col-md-6 col-sm-12 col-xsm-12">
+            <img src="http://127.0.0.1:8000/media/{{ product.image }}" class="card-img-top" alt="{{ product.name }}"
+                height="400px">
+        </div>
+        <div class="col col-xxl-4 col-xl-4 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container my-2">
+                        <h4>{{ product.name }}</h4>
+                        <p> <span style="color: grey; font-weight: bold;">CATAGORY </span> {{ product.catagory }} </p>
+                        <p style="font-weight: bold;">৳{{ product.price }}</p>
+                        {% if product.discount != 0.00 %}
+                        <p> <span style="color: grey; font-weight: bold;">Discount</span> <span
+                                style="font-weight: bold; color: red;">{{ product.discount }}%</span> </p>
+                        {% endif %}
+                        <form action="/cart/{{ product.id }}" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    <p style="color: grey; font-weight: bold;">Quantity</p>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" id="formGroupExampleInput"
+                                        placeholder="Eg. 1" name="quantity" required>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2" style="margin-top: 15px;">
+                                {% if user.is_authenticated %}
+                                <button class="btn btn-dark" type="submit">Add to cart</button>
+                                <!-- <a class="btn btn-dark" href="" role="button">Add to cart</a> -->
+                                {% else %}
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                    data-bs-target="#loginModal">Add
+                                    to cart</button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-xxl-4 col-xl-4 col-md-12">
+            <p style="font-weight: bold;">Seller <a href="">{{ product.user }}</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- Description & review -->
+<div class="container my-2">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="des-tab" data-bs-toggle="tab" data-bs-target="#des" type="button"
+                role="tab" aria-controls="des" aria-selected="true">Description</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="rev-tab" data-bs-toggle="tab" data-bs-target="#rev" type="button" role="tab"
+                aria-controls="rev" aria-selected="false">Reviews</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="des" role="tabpanel" aria-labelledby="des-tab">
+            <p>{{ product.details }}</p>
+        </div>
+        <div class="tab-pane fade" id="rev" role="tabpanel" aria-labelledby="rev-tab">
+            <div class="container my-2">
+                {% for review in all_reviews %}
+                <h5>{{ review.user }}</h5>
+                <p style="color: grey; font-size: 12px;">{{ review.created_at }}</p>
+                <p>{{ review.comment }}</p>
+                <hr>
+                {% endfor %}
+            </div>
+            <form action="/review/{{ product.slug }}" method="POST" class="row g-2">
+                {% csrf_token %}
+                <div class="col-8">
+                    <textarea class="form-control" name="cmnt" id="exampleFormControlTextarea1" rows="3" required
+                        placeholder="wirte your review.."></textarea>
+                </div>
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary mb-3">submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Shooop | Create Account{% endblock title %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="card my-5 w-50">
+        <div class="container my-4">
+            <h5>Create Account</h5>
+            <form method="POST" action="/user/create/">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                name="fname">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                name="lname">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPhone1" class="form-label">Phone number</label>
+                    <input type="number" class="form-control" id="exampleInputPhone1" aria-describedby="phoneHelp"
+                        name="phone" maxlength="11">
+                    <div id="phoneHelp" class="form-text">We'll never share your phone number with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        name="username">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type1" id="choice1" value="buyer" checked>
+                    <label class="form-check-label" for="type1" name="type1">Buyer</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type1" id="choice2" value="seller">
+                    <label class="form-check-label" for="type2" name="type2">Seller</label>
+                </div>
+                <div class="d-grid gap-2" style="margin-top: 8px;">
+                    <button type="submit" class="btn btn-dark">Create!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

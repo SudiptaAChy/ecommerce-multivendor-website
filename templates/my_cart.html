@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Shooop | My cart{% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row my-5">
+        <div class="col">
+            <div class="card w-25">
+                <div class="card-body text-center">
+                    <p>Total Order</p>
+                </div>
+                <div class="card-body text-center">
+                    <h5>{{ total_order }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card w-25">
+                <div class="card-body text-center">
+                    <p>Total Tk</p>
+                </div>
+                <div class="card-bod text-center">
+                    <h5>৳{{ total_tk }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if all_products %}
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shippingmodal">ORDER ALL</button>
+    {% endif %}
+    <div class="row my-2">
+        {% for product in all_products %}
+        <div class="col col-lg-3 col-sm-2 my-1 mx-1">
+            <div class="card" style="width: 18rem;">
+                <div class="container  my-2">
+                    <img src="http://127.0.0.1:8000/media/{{ product.product.image }}" class="card-img-top"
+                        alt="{{ product.name }}" height="250px">
+                </div>
+                <div class="card-body">
+                    <a href="/details/{{ product.product.slug }}">
+                        <h6>{{ product.product.name|truncatechars:45 }}</h6>
+                    </a>
+                    <p>Qty - {{ product.quantity }}</p>
+                    <p>৳{{ product.price }}</p>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-danger" href="/mycart/remove/{{ product.id }}" role="button">REMOVE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Shipping details modal -->
+<div class="modal fade" id="shippingmodal" tabindex="-1" aria-labelledby="shippingmodalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shippingmodalLabel">Shipping Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/order/" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="exampleInputName" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="exampleInputName" placeholder="Sudipta Chy" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPhone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" name="phone" id="exampleInputPhone" placeholder="+88016........" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="SudiptaChy@gmail.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputStreetAddress" class="form-label">Street Address</label>
+                        <textarea class="form-control" name="address" id="exampleInputStreetAddress" cols="30" rows="5" placeholder="House-xx, road-xx, area-xx, city-xx" required></textarea>
+                    </div>
+                <button type="submit" class="btn btn-primary">ORDER!</button>
+                </form>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock content %}
